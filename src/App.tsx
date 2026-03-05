@@ -13,12 +13,9 @@ interface CssGiftBoxProps {
 const CssGiftBox = ({ onTouchStart, onTouchEnd, progress }: CssGiftBoxProps) => {
   const faceClass = "absolute w-full h-full border border-pink-200/50 bg-pink-100 flex items-center justify-center overflow-hidden shadow-sm";
   
-  // Tremor e "Esmagamento" (Tensão)
   const shakeIntensity = progress > 0 ? (progress / 100) * 6 : 0;
   const xShake = (Math.random() - 0.5) * shakeIntensity;
   const yShake = (Math.random() - 0.5) * shakeIntensity;
-  
-  // A caixa encolhe ligeiramente à medida que a pressão aumenta
   const boxScale = progress > 0 ? 1 - (progress / 100) * 0.08 : 1;
 
   return (
@@ -37,7 +34,7 @@ const CssGiftBox = ({ onTouchStart, onTouchEnd, progress }: CssGiftBoxProps) => 
         animate={{ 
           rotateY: [0, 360],
           rotateX: [10, 20, 10],
-          y: progress > 0 ? 0 : [0, -12, 0], // Flutuação maior quando parada
+          y: progress > 0 ? 0 : [0, -12, 0],
           scale: boxScale
         }}
         transition={{ 
@@ -62,7 +59,6 @@ const CssGiftBox = ({ onTouchStart, onTouchEnd, progress }: CssGiftBoxProps) => 
           return (
             <div key={face} className={faceClass} style={{ transform }}>
               <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-transparent" />
-              {/* Fita Rose Gold */}
               <div className="absolute w-8 h-full bg-rose-300 shadow-[0_0_15px_rgba(253,164,175,0.4)]" />
               <div className="absolute w-full h-8 bg-rose-300 shadow-[0_0_15px_rgba(253,164,175,0.4)]" />
             </div>
@@ -70,7 +66,6 @@ const CssGiftBox = ({ onTouchStart, onTouchEnd, progress }: CssGiftBoxProps) => 
         })}
       </motion.div>
 
-      {/* Anel de Progresso Mágico (Fica mais brilhante ao encher) */}
       <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 pointer-events-none opacity-80">
         <circle 
           cx="50%" cy="50%" r="42%" 
@@ -84,7 +79,6 @@ const CssGiftBox = ({ onTouchStart, onTouchEnd, progress }: CssGiftBoxProps) => 
         />
       </svg>
 
-      {/* Brilho no chão */}
       <motion.div 
         className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-32 h-8 bg-pink-300/40 rounded-[100%] blur-md"
         animate={{ scale: progress > 0 ? 0.8 : [1, 1.1, 1], opacity: progress > 0 ? 0.6 : [0.4, 0.2, 0.4] }}
@@ -94,7 +88,6 @@ const CssGiftBox = ({ onTouchStart, onTouchEnd, progress }: CssGiftBoxProps) => 
   );
 };
 
-// Tipagem das partículas
 interface Particle {
   id: number;
   x: number;
@@ -105,7 +98,6 @@ interface Particle {
   delay: number;
 }
 
-// --- COMPONENTE DE PARTÍCULAS ---
 const FloatingParticles = () => {
   const [particles, setParticles] = useState<Particle[]>([]);
 
@@ -153,7 +145,6 @@ const FloatingParticles = () => {
   );
 };
 
-// --- COMPONENTE PRINCIPAL ---
 export default function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
@@ -181,7 +172,7 @@ export default function App() {
             triggerExplosion();
             return 100;
           }
-          return prev + 1.2; // Ligeiramente mais lento para apreciar a tensão
+          return prev + 1.2;
         });
       }, 20);
     } else {
@@ -202,20 +193,19 @@ export default function App() {
     
     setTimeout(() => {
       setIsOpen(true);
-    }, 400); // Atraso perfeito para coincidir com o pico do clarão
+    }, 400);
 
     setTimeout(() => {
       setShowFlash(false);
     }, 1500);
   };
 
-  // Variantes para a animação em cascata (Stagger) do Cartão
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3, // Tempo entre cada elemento aparecer
+        staggerChildren: 0.3,
         delayChildren: 0.4
       }
     }
@@ -229,7 +219,6 @@ export default function App() {
   return (
     <div className="min-h-screen bg-rose-50 text-rose-950 font-sans selection:bg-pink-300 overflow-x-hidden relative">
       
-      {/* Efeito de Explosão Mágica (Shockwave + Flash) */}
       <AnimatePresence>
         {showFlash && (
           <motion.div 
@@ -239,40 +228,30 @@ export default function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
           >
-            {/* Fundo Branco */}
             <motion.div 
               className="absolute inset-0 bg-white"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2, ease: "easeIn" }}
             />
-            {/* Anéis de Onda de Choque */}
             <motion.div 
               className="absolute w-32 h-32 border-[20px] border-pink-200 rounded-full"
               initial={{ scale: 0, opacity: 1 }}
               animate={{ scale: 25, opacity: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             />
-            <motion.div 
-              className="absolute w-32 h-32 border-[10px] border-rose-300 rounded-full"
-              initial={{ scale: 0, opacity: 1 }}
-              animate={{ scale: 15, opacity: 0 }}
-              transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
-            />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Player do YouTube Oculto */}
       {audioPlaying && (
         <iframe
           width="0"
           height="0"
           src="https://www.youtube.com/embed/UrsugWL1Fss?autoplay=1&loop=1&playlist=UrsugWL1Fss"
-          title="YouTube video player"
+          title="YouTube"
           frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
+          allow="autoplay"
           className="hidden"
         />
       )}
@@ -286,7 +265,6 @@ export default function App() {
             exit={{ opacity: 0, scale: 0.9 }}
             className="h-screen w-full flex flex-col items-center justify-center relative bg-gradient-to-br from-rose-50 via-pink-50 to-white overflow-hidden"
           >
-            {/* Brilho Mágico de Fundo ao Pressionar */}
             <div 
               className="absolute inset-0 pointer-events-none transition-opacity duration-300 bg-[radial-gradient(circle,transparent_10%,#ffe4e6_100%)]"
               style={{ opacity: progress / 100 }}
@@ -334,20 +312,12 @@ export default function App() {
             <FloatingParticles />
 
             <motion.header variants={itemVariants} className="w-full pt-12 mb-8 text-center relative z-10">
-              <div className="flex justify-center mb-6 text-rose-400 gap-4">
-                <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ repeat: Infinity, duration: 4 }}><Sparkles size={24} /></motion.div>
-                <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3 }}><Gift size={28} className="text-rose-500" /></motion.div>
-                <motion.div animate={{ rotate: [0, -10, 10, 0] }} transition={{ repeat: Infinity, duration: 4, delay: 1 }}><Sparkles size={24} /></motion.div>
-              </div>
-
-              <h2 className="text-6xl font-serif text-rose-800 leading-none tracking-tight drop-shadow-sm">
+              <h2 className="text-6xl font-serif text-rose-800 leading-none tracking-tight">
                 {birthdayData.nome}
               </h2>
-              
               <p className="text-xl font-medium uppercase tracking-[0.3em] text-rose-500 mt-4">
                 Feliz 20 Anos
               </p>
-              <div className="w-16 h-[2px] bg-rose-300 mx-auto mt-6 rounded-full" />
             </motion.header>
 
             <motion.div variants={itemVariants} className="mb-10 text-center px-6 max-w-sm z-10">
@@ -356,72 +326,33 @@ export default function App() {
               </p>
             </motion.div>
 
-            {/* CAIXA DE MENSAGEM (Com flutuação contínua após aparecer) */}
-            <motion.div 
-              variants={itemVariants} 
-              className="w-full max-w-sm z-10 mt-2"
-              whileHover={{ scale: 1.02 }}
-            >
+            <motion.div variants={itemVariants} className="w-full max-w-sm z-10 mt-2">
               <motion.section 
                 animate={{ y: [0, -8, 0] }} 
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                 className="bg-white/80 backdrop-blur-md border border-white p-8 rounded-3xl relative shadow-[0_15px_40px_-15px_rgba(244,63,94,0.2)]"
               >
-                
-                <div className="absolute -top-5 -left-2 p-3 bg-rose-100 rounded-full shadow-sm border border-white rotate-[-10deg]">
-                   <Heart size={20} className="text-rose-500 fill-rose-500/50" />
-                </div>
-                <div className="absolute -bottom-5 -right-2 p-3 bg-rose-100 rounded-full shadow-sm border border-white rotate-[10deg]">
-                   <Music size={20} className="text-rose-500" />
-                </div>
-                
-                <h3 className="text-center font-cursive text-rose-600 text-4xl mb-6 font-normal tracking-wide">
-                  Parabéns!
-                </h3>
-                
+                <h3 className="text-center font-cursive text-rose-600 text-4xl mb-6">Parabéns!</h3>
                 <p className="text-rose-900/80 text-center leading-relaxed text-[15px] font-medium">
                   {birthdayData.mensagem}
                 </p>
-
-                <div className="mt-10 flex justify-center">
-                  <div className="px-8 py-2 bg-rose-50 rounded-full border border-rose-200 text-rose-400 text-xs uppercase tracking-[0.2em] font-bold shadow-sm">
-                    Com muito carinho 💖
-                  </div>
-                </div>
               </motion.section>
             </motion.div>
 
-            {/* Controle de Áudio Manual */}
-            <motion.div variants={itemVariants} className="fixed bottom-8 right-8 z-50">
-              <button 
-                onClick={toggleAudio}
-                className="w-14 h-14 bg-white/90 backdrop-blur-md rounded-full flex items-center justify-center border border-rose-100 shadow-[0_5px_15px_rgba(244,63,94,0.15)] active:scale-90 transition-transform hover:bg-rose-50"
-              >
+            <div className="fixed bottom-8 right-8 z-50">
+              <button onClick={toggleAudio} className="w-14 h-14 bg-white/90 rounded-full flex items-center justify-center border border-rose-100 shadow-lg">
                 {audioPlaying ? <Volume2 size={24} className="text-rose-500" /> : <VolumeX size={24} className="text-rose-300" />}
               </button>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
-        
-        body { 
-          font-family: 'Inter', sans-serif; 
-          background-color: #fff1f2; /* rose-50 */
-          margin: 0; 
-        }
-        
-        .font-serif {
-          font-family: 'Playfair Display', serif;
-        }
-
-        .font-cursive { 
-          font-family: 'Dancing Script', cursive; 
-        }
-        
-        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; margin: 0; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-cursive { font-family: 'Dancing Script', cursive; }
       `}</style>
     </div>
   );
